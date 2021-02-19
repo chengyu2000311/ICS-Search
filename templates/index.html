@@ -1,0 +1,51 @@
+<style>
+    .wrapper {
+        text-align: center; /*让div内部文字居中*/
+        background-color: #fff;
+        border-radius: 20px;
+        width: 300px;
+        height: 30px;
+        margin: auto;
+        position: relative;
+        top: 10;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+    table, th, td {
+        border: 1px solid black;
+        width: 30px;
+        height: 35px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 100;
+        text-align: left;
+    }
+</style>
+<title>ICBC Search</title>
+<div>
+<form class="wrapper">
+    <input style="float: left;" type="text" id="query" name="query"/> 
+    <button style="float: right;">Search Now!</button>
+</form>
+</div>
+
+<div>
+    <table style="width:50%">
+        <tr>
+           <th>{{one}}</th> 
+        </tr>
+        <tr>
+            <th>{{two}}</th> 
+        </tr>
+        <tr>
+            <th>{{three}}</th> 
+         </tr>
+         <tr>
+             <th>{{four}}</th> 
+         </tr>
+         <tr>
+            <th>{{five}}</th> 
+         </tr>
+    </table>
+</div>
