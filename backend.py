@@ -7,6 +7,7 @@ app=Flask(__name__)
 @app.route('/')
 def index():
     query = request.args.get('query')
+    urls = [None] * 5
     searchEni = search("./indexFile/10924TokenDocId.txt", "./indexFile/tf_idfMerge.txt")
     while True:
         if query != None:
