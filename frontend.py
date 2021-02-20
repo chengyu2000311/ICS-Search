@@ -3,17 +3,16 @@ from searcher import search
 app=Flask(__name__)
 
 
-
 @app.route('/')
 def index():
     query = request.args.get('query')
-    urls = [None] * 5
+    urls = ['Result Place holder'] * 5
     searchEni = search("./indexFile/10924TokenDocId.txt", "./indexFile/tf_idfMerge.txt")
-    while True:
-        if query != None:
-            urls = searchEni.start(query)
-        return render_template("index.html", one=urls[0], two=urls[1], three=urls[2],
-        four=urls[3],five=urls[4])  #加入变量传递
+    if query != None:
+        urls = searchEni.start(query)
+    query = "Enter here" if query == None else query
+    return render_template("index.html", one=urls[0], two=urls[1], three=urls[2],
+        four=urls[3],five=urls[4], query=query)
 
 
 if __name__=="__main__":
