@@ -7,7 +7,7 @@ app=Flask(__name__)
 def index():
     query = request.args.get('query')
     urls = ['Result Place holder'] * 5
-    searchEni = search("./indexFile/10924TokenDocId.txt", "./indexFile/tf_idfMerge.txt")
+    searchEni = search("./indexFile/10650TokenDocId.txt", "./indexFile/tf_idfMerge.txt")
     if query != None:
         urls = searchEni.start(query)
     query = "Enter here" if query == None else query
