@@ -22,10 +22,17 @@
         text-align: left;
     }
 </style>
+<link rel="icon" href="{{ url_for('static', filename='logo.png')}}">
 <title>ICBC Search</title>
+
+<div style="text-align: center; width: 500px; position: relative; margin: 0 auto;">
+    <img style="margin: 0 auto;"  src="{{ url_for('static', filename='ICBC.png')}}" alt="ICBC Search Logo" width="150" height="100">
+    <footer> <strong>ICBC Searching Pages Under Domain <a href="https://www.ics.uci.edu" target="_blank">ics.uci.edu</a> </strong> </footer>
+</div>
+
 <div>
 <form class="wrapper">
-    <input style="float: left;" type="text" id="query" name="query"/> 
+    <input style="float: left;" type="text" id="query" name="query", placeholder="{{query}}"/> 
     <button style="float: right;">Search Now!</button>
 </form>
 </div>
@@ -49,3 +56,4 @@
          </tr>
     </table>
 </div>
+
