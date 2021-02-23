@@ -6,3 +6,5 @@ __pycache__/searcher.cpython-36.pyc
 indexFile/10650TokenDocId.txt
 indexFile/tf_idfMerge.txt
 IoT.json
+indexFile.old/tf_idfMerge.txt
+indexFile.old/10650TokenDocId.txt

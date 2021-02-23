@@ -1,26 +1,30 @@
-import os, Stemmer, linecache, time
+import os, Stemmer, linecache, time, json, io
 
 class search():
     def __init__(self, indexFile: str, tf_idfFile: str):
         self.stemmer = Stemmer.Stemmer('english')
         self.indexFile = indexFile
         self.tf_idfFile = tf_idfFile
+        with open("IoT.json", 'r') as iotfile:
+            self.Index_of_Token = json.load(iotfile)
     
     def _getIndexForAllQueries(self, fileName: str, tokens: list) -> list:
         res = [None]*len(tokens)
-        with open(fileName) as f:
-            for line in f:
-                if all([x!=None for x in res]): break
-                for i in range(len(tokens)):
-                    if tokens[i] == line.split(' -> ')[0]:
-                        res[i] = eval(line.split(' -> ')[1])[1]
+        with io.open(fileName, newline= "\n") as f:
+            for token in tokens:
+                pos = self.Index_of_Token[token]
+                f.seek(pos)
+                line = f.readline()
+                print(line)
+                res.append(eval(line.split(' -> ')[1])[1])
         return res
 
     def _searchForSingleQuery(self, fileName: str, token: str):
-        with open(fileName) as f:
-            for line in f:
-                if token == line.split(' -> ')[0]:
-                    return eval(line.split(' -> ')[1])[1]
+        with io.open(fileName, newline= "\n") as f:
+            pos= self.Index_of_Token[token]
+            f.seek(pos)
+            line = f.readline()
+            return eval(line.split(' -> ')[1])[1]
 
     def _merge2Index(self, DocL1: list, DocL2: list) -> list:
         answer = []
