@@ -4,7 +4,7 @@ if __name__ == "__main__":
 	ha = dict()
 	c = 0
 	i = 0
-	with io.open("./indexFile/10650TokenDocId.txt", "rt", newline= "\n") as words:
+	with io.open("./indexFile/10176TokenDocId.txt", "rt", newline= "\n") as words:
 		check = words.readline()
 		words.seek(0, 0)
 		for line in words:
