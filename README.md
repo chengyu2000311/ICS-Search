@@ -1,7 +1,7 @@
 # ICBC Search
 
 + It is a Project Assignment for CS 121 (Information Retrieval) at UC Irvine. The project is a search engine searching for pages under domain [ics.uci.edu](ics.uci.edu). 
-+ The name ICBC comes from Industrial and Commercial Bank of China. 
++ The name ICBC comes from Industrial and Commercial Bank of China.
 
 ***************************
 
@@ -9,12 +9,12 @@
 
 + A search engine from the ground up that is capable of handling tens of thousands of documents or Web pages, under harsh op- erational constriants and having a query response time under 300ms.
 
-***************************
+
 
 ## Requirements
 
 + [None for now]("https://www.baidu.com")
-***************************
+
 
 ## Installation or Getting Started
 
@@ -22,25 +22,25 @@
 	git clone https://github.com/chengyu2000311/CS171.git
     python3 frontend.py
 
-***************************
+
 
 ## Usage
 
 + open a browser and type localhost:2021
 
-***************************
+
     
 ## Reference
 
 + [jxson](https://gist.github.com/jxson) - [README.md](https://gist.github.com/jxson/1784669)
 
-***************************
+
 
 ## Contributors
 
 + Haoyu Cheng, Qiwei He, Runyi Li
 
-***************************
+
 
 ## License
  
