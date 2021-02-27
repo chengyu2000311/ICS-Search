@@ -9,3 +9,5 @@ IoT.json
 indexFile.old/tf_idfMerge.txt
 indexFile.old/10650TokenDocId.txt
 indexFile/10176TokenDocId.txt
+*.icloud
+.DS_Store
