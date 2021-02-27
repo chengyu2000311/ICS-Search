@@ -1,8 +1,5 @@
 
-<<<<<<< HEAD
-=======
 __pycache__/searcher.cpython-36.pyc
->>>>>>> master
 indexFile/10650TokenDocId.txt
 indexFile/tf_idfMerge.txt
 IoT.json
@@ -11,3 +8,5 @@ indexFile.old/10650TokenDocId.txt
 indexFile/10176TokenDocId.txt
 DtU.json
 indexFile/url_file.txt
+*.icloud
+.DS_Store
