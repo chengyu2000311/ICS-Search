@@ -1,4 +1,5 @@
-import os, Stemmer, linecache, time, json, io
+import os, Stemmer, linecache, time, json, io, multiprocessing, math
+
 
 class search():
     def __init__(self, indexFile: str, tf_idfFile: str):
@@ -7,7 +8,9 @@ class search():
         self.tf_idfFile = tf_idfFile
         with open("IoT.json", 'r') as iotfile:
             self.Index_of_Token = json.load(iotfile)
-    
+        with open("DtU.json", 'r') as duf:
+            self.DocId_to_URL = json.load(duf)
+
     def _getIndexForAllQueries(self, fileName: str, tokens: list) -> list:
         res = list()
         with io.open(fileName, newline= "\n") as f:
@@ -15,8 +18,7 @@ class search():
                 pos = self.Index_of_Token[token]
                 f.seek(pos)
                 line = f.readline()
-                #print(line)
-                res.append(eval(line.split(' -> ')[1])[1])
+                res.append(eval(line.split(' -> ')[1]))
         return res
 
     def _searchForSingleQuery(self, fileName: str, token: str):
@@ -24,51 +26,57 @@ class search():
             pos= self.Index_of_Token[token]
             f.seek(pos)
             line = f.readline()
-            return eval(line.split(' -> ')[1])[1]
+            res = eval(line.split(' -> ')[1])
+            return res
+
+
+
 
     def _merge2Index(self, DocL1: list, DocL2: list) -> list:
         answer = []
         index1, index2 = 0, 0
-        print(type(DocL1))
-        print(type(DocL1))
         while index1 != len(DocL1) and index2 != len(DocL2):
-            if DocL1[index1] == DocL2[index2]:
+            if DocL1[index1][1] == DocL2[index2][1]:
                 answer.append(DocL1[index1])
                 index1 += 1
                 index2 += 1
             else:
-                if DocL1[index1] < DocL2[index2]:
+                if DocL1[index1][1] < DocL2[index2][1]:
                     index1 += 1
-                else: index2 += 1
+                else:
+                    index2 += 1
         return answer
 
     def getUrl(self, DocId: list) -> list:
-        return [eval(linecache.getline(self.tf_idfFile, int(x)+1).split(' -> ')[1])[0] for x in DocId]
+        return [eval(linecache.getline(self.tf_idfFile, int(x) + 1).split(' -> ')[1])[0] for x in DocId]
 
-    def rankThePage(self, Docs: list, query: str) -> list:
+    def rankThePage(self, Docs: list) -> list:
         try:
-            #print(eval(linecache.getline(self.tf_idfFile, 2+1).split(' -> ')[1])[1]['acm'])
-            answer = sorted([eval(linecache.getline(self.tf_idfFile, int(x)+1).split(' -> ')[1]) for x in Docs], key=lambda x:-(x[1][query]))
+            doc_freq = len(Docs)
+            buf = [[x[0], x[1]] for x in Docs]
+            for i in range(doc_freq):
+                buf[i][0] = round((1 + math.log10(buf[i][0]) *  math.log10( 51478 / doc_freq)) , 2)
+            answer = sorted(buf, key=lambda x: -(x[0]))
             # Following are for debug in case indexer is wrong
             # for x in Docs:
             #     a = eval(linecache.getline(self.tf_idfFile, int(x)+1).split(' -> ')[1])
             #     if 'acm' not in a[1]:
             #         print(a[0])
-
-            return [x[0] for x in answer]
+            after_sort = time.time()
+            res =  [self.DocId_to_URL[str(x[1])] for x in answer]
+            return res
         except KeyError:
             print('error')
 
-    def rankBasedOnAnd(self, Docs: list, queries: list) -> list:
+    def rankBasedOnAnd(self, Docs: list) -> list:
         try:
-            answer = sorted([eval(linecache.getline(self.tf_idfFile, int(x)+1).split(' -> ')[1]) for x in Docs], key=lambda x:-sum([x[1][query] for query in queries]))
-            # Following are for debug in case indexer is wrong
-            # for x in Docs:
-            #     a = eval(linecache.getline(self.tf_idfFile, int(x)+1).split(' -> ')[1])
-            #     for q in queries:
-            #         if q not in a[1]:
-            #             print(a[0])
-            return [x[0] for x in answer]
+            doc_freq = len(Docs)
+            buf = [[x[0], x[1]] for x in Docs]
+            for i in range(doc_freq):
+                buf[i][0] = round((1 + math.log10(buf[i][0]) * math.log10(51478 / doc_freq)), 2)
+            answer = sorted(buf, key=lambda x: -(x[0]))
+            res = [self.DocId_to_URL[str(x[1])] for x in answer]
+            return res
         except KeyError:
             print('error')
 
@@ -81,22 +89,29 @@ class search():
             queries = [self.stemmer.stemWord(x) for x in query.split()]
         query = self.stemmer.stemWord(query)
         if len(queries) == 0:
-                #print(self._searchForSingleQuery(self.indexFile, query)[:5])
-                #print(self.getUrl(self._searchForSingleQuery(self.indexFile, query)[:5]))
-            return ((self.rankThePage(self._searchForSingleQuery(self.indexFile, query), query))[:5])
+            buf = self._searchForSingleQuery(self.indexFile, query)
+            mid = time.time()
+            print("Spent {} On searching DocID".format(mid-start))
+            result = (self.rankThePage(buf))[:5]              
+            end = time.time()
+            print(f"Spent {end - mid} on sorting.\nCompleted in {end - start} seconds.")
+            return result
             end = time.time()
             print(f"completed in {end-start} seconds.")
         else:
             allIndexs = self._getIndexForAllQueries(self.indexFile, queries)
-            print(allIndexs)
+            mid = time.time()
             answer = self._merge2Index(allIndexs[0], allIndexs[1])
             for i in range(2, len(queries)):
                 answer = self._merge2Index(answer, allIndexs[i])
-                #print(self.getUrl(answer[:5]))
-            return (self.rankBasedOnAnd(answer, queries)[:5])
-            end = time.time()
-            print(f"completed in {end-start} seconds.")
+                # print(self.getUrl(answer[:5]))
+                end = time.time()
+                print(answer)
+                print("{} spent On searching DocID".format(mid - start))
+                print(f"Spent {end - mid} on sorting.\ncompleted in {end - start} seconds.")
+            return self.rankBasedOnAnd(answer)[:6]
+
 
 if __name__ == "__main__":
     searchEni = search("./indexFile/10176TokenDocId.txt", "./indexFile/tf_idfMerge.txt")
-    searchEni.start("acm")
+    print(searchEni.start("machine learning"))
