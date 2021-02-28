@@ -111,7 +111,10 @@ class indexer:
                     else:
                         hashes.add(md5)
                     if check_duplicate:
-                        freq = computeWordFrequencies(tokenize2(soup.get_text()))
+                        content = soup.get_text() # first get all content into memory
+                        for tag in soup.find_all(['h1', 'strong']): # find all tag h1 and strong
+                            content += f' {tag.get_text()}' # add in the end of content and pass to tokenize2
+                        freq = computeWordFrequencies(tokenize2(content))
 
                         for k, v in freq.items():
                             if k in self.indexDocID:
