@@ -1,95 +1,66 @@
-import os, Stemmer, linecache, time
+import os, Stemmer, linecache, time, json, io, multiprocessing, math, heapq
+from collections import defaultdict
+from threading import Thread
+
 
 class search():
     def __init__(self, indexFile: str, tf_idfFile: str):
         self.stemmer = Stemmer.Stemmer('english')
         self.indexFile = indexFile
         self.tf_idfFile = tf_idfFile
-    
-    def _getIndexForAllQueries(self, fileName: str, tokens: list) -> list:
-        res = [None]*len(tokens)
-        with open(fileName) as f:
-            for line in f:
-                if all([x!=None for x in res]): break
-                for i in range(len(tokens)):
-                    if tokens[i] == line.split(' -> ')[0]:
-                        res[i] = eval(line.split(' -> ')[1])[1]
-        return res
+        with open("./indexFile/IoT.json", 'r') as iotfile:
+            self.Index_of_Token = json.load(iotfile)
+        with open("./indexFile/DtU.json", 'r') as duf:
+            self.DocId_to_URL = json.load(duf)
+        self.numOfDocs = len(self.DocId_to_URL)
+        self.stopwords = {'ourselves', 'hers', 'between', 'yourself', 'but', 'again', 'there', 'about', 'once', 'during', 'out', 'very', 'having', 'with', 'they', 'own', 'an', 'be', 'some', 'for', 'do', 'its', 'yours', 'such', 'into', 'of', 'most', 'itself', 'other', 'off', 'is', 's', 'am', 'or', 'who', 'as', 'from', 'him', 'each', 'the', 'themselves', 'until', 'below', 'are', 'we', 'these', 'your', 'his', 'through', 'don', 'nor', 'me', 'were', 'her', 'more', 'himself', 'this', 'down', 'should', 'our', 'their', 'while', 'above', 'both', 'up', 'to', 'ours', 'had', 'she', 'all', 'no', 'when', 'at', 'any', 'before', 'them', 'same', 'and', 'been', 'have', 'in', 'will', 'on', 'does', 'yourselves', 'then', 'that', 'because', 'what', 'over', 'why', 'so', 'can', 'did', 'not', 'now', 'under', 'he', 'you', 'herself', 'has', 'just', 'where', 'too', 'only', 'myself', 'which', 'those', 'i', 'after', 'few', 'whom', 't', 'being', 'if', 'theirs', 'my', 'against', 'a', 'by', 'doing', 'it', 'how', 'further', 'was', 'here', 'than'}
+        # copy from nltk.corpus import stopwords('english')
 
-    def _searchForSingleQuery(self, fileName: str, token: str):
-        with open(fileName) as f:
-            for line in f:
-                if token == line.split(' -> ')[0]:
-                    return eval(line.split(' -> ')[1])[1]
+    def termAtATimeRetrieval(self, Query: str):
+        def accOneInvertedList(invertedList: list): # A = {DocID : score}
+            doc_num = len(invertedList)
+            subA = defaultdict(float)
+            for count, value in enumerate(invertedList):
+                d = value[1]
+                subA[d] = subA[d] + (1 + math.log10(value[0]) * math.log10(self.numOfDocs / doc_num))
+            A.append(subA)
 
-    def _merge2Index(self, DocL1: list, DocL2: list) -> list:
-        answer = []
-        index1, index2 = 0, 0
-        while index1 != len(DocL1) and index2 != len(DocL2):
-            if DocL1[index1] == DocL2[index2]:
-                answer.append(DocL1[index1])
-                index1 += 1
-                index2 += 1
-            else:
-                if DocL1[index1] < DocL2[index2]:
-                    index1 += 1
-                else: index2 += 1
-        return answer
-
-    def getUrl(self, DocId: list) -> list:
-        return [eval(linecache.getline(self.tf_idfFile, int(x)+1).split(' -> ')[1])[0] for x in DocId]
-
-    def rankThePage(self, Docs: list, query: str) -> list:
+        A = [] # A will be a list of dict(DocId : score)
+        L = list()
+        R = [] # R is a priority queue
+        for term in [self.stemmer.stemWord(x.lower()) for x in Query.split() if x.lower() not in self.stopwords]:
+            with open(self.indexFile) as f:
+                pos= self.Index_of_Token[term]
+                f.seek(pos)
+                line = f.readline()
+                li = eval(line.split(' -> ')[1]) # get inverted list based on term from index
+                L.append(li)
         try:
-            #print(eval(linecache.getline(self.tf_idfFile, 2+1).split(' -> ')[1])[1]['acm'])
-            answer = sorted([eval(linecache.getline(self.tf_idfFile, int(x)+1).split(' -> ')[1]) for x in Docs], key=lambda x:-(x[1][query]))
-            # Following are for debug in case indexer is wrong
-            # for x in Docs:
-            #     a = eval(linecache.getline(self.tf_idfFile, int(x)+1).split(' -> ')[1])
-            #     if 'acm' not in a[1]:
-            #         print(a[0])
+            allThreads = []
+            for invertedList in L:
+                allThreads.append(Thread(target=accOneInvertedList, args=(invertedList, )))
+            for i in allThreads: i.start()
+            for i in allThreads: i.join()
+        except:
+            print("Error in threads")
 
-            return [x[0] for x in answer]
-        except KeyError:
-            print('error')
+        # merge all subA
+        finalA = defaultdict(float)
+        for i in A:
+            for k, v in i.items():
+                finalA[k] += v
 
-    def rankBasedOnAnd(self, Docs: list, queries: list) -> list:
-        try:
-            answer = sorted([eval(linecache.getline(self.tf_idfFile, int(x)+1).split(' -> ')[1]) for x in Docs], key=lambda x:-sum([x[1][query] for query in queries]))
-            # Following are for debug in case indexer is wrong
-            # for x in Docs:
-            #     a = eval(linecache.getline(self.tf_idfFile, int(x)+1).split(' -> ')[1])
-            #     for q in queries:
-            #         if q not in a[1]:
-            #             print(a[0])
-            return [x[0] for x in answer]
-        except KeyError:
-            print('error')
+        for k, v in finalA.items():
+            heapq.heappush(R, (-v, k)) # since it is a min-heap, we reverse the score 
+
+        return R
+
+    def start(self, Query: str):
+        R = self.termAtATimeRetrieval(Query)
+        return [self.DocId_to_URL[str(x[1])] for x in R][:5]
 
 
-    def start(self, query: str):
-        query = query.lower()
-        start = time.time()
-        queries = []
-        if len(query.split()) > 1:
-            queries = [self.stemmer.stemWord(x) for x in query.split()]
-        query = self.stemmer.stemWord(query)
-        if len(queries) == 0:
-                #print(self._searchForSingleQuery(self.indexFile, query)[:5])
-                #print(self.getUrl(self._searchForSingleQuery(self.indexFile, query)[:5]))
-            return ((self.rankThePage(self._searchForSingleQuery(self.indexFile, query), query))[:5])
-            end = time.time()
-            print(f"completed in {end-start} seconds.")
-        else:
-            allIndexs = self._getIndexForAllQueries(self.indexFile, queries)
-            answer = self._merge2Index(allIndexs[0], allIndexs[1])
-            for i in range(2, len(queries)):
-                answer = self._merge2Index(answer, allIndexs[i])
-                #print(self.getUrl(answer[:5]))
-            return (self.rankBasedOnAnd(answer, queries)[:5])
-            end = time.time()
-            print(f"completed in {end-start} seconds.")
 
 if __name__ == "__main__":
-    searchEni = search("./CS121_Assignment3/indexFile/10924TokenDocId.txt", "./CS121_Assignment3/indexFile/tf_idfMerge.txt")
-    searchEni.start()
+    searchEni = search("./indexFile/10176TokenDocId.txt", "./indexFile/tf_idfMerge.txt")
+    print(searchEni.run("master of computer science"))
