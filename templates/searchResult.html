@@ -1,0 +1,105 @@
+<style>
+    
+    @font-face {
+      font-family: 'SF Pro';
+      src: url('./fonts/SF-Pro.ttf') format('truetype');
+      font-weight: 500;
+      font-style: normal;
+    }
+    .wrapper {
+        text-align: center; /*让div内部文字居中*/
+        background-color: #fff;
+        border-radius: 20px;
+        width: 300px;
+        height: 30px;
+        margin: auto;
+        position: relative;
+        top: 10;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+    .table, th, td {
+        border: 1px solid black;
+        width: 30px;
+        height: 35px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 100;
+        text-align: left;
+    }
+    body{ font-family:"SF Pro"}
+
+</style>
+<link rel="icon" href="{{ url_for('static', filename='logo.png')}}">
+<title>{{query}} - ICBC Search</title>
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</head>
+
+
+<div style="text-align: center; width: 500px; position: relative; margin: 0 auto;">
+    <img style="margin: 0 auto;"  src="{{ url_for('static', filename='ICBC.png')}}" alt="ICBC Search Logo" width="150" height="100">
+    <footer> <strong>ICBC Searching Pages Under Domain <a href="https://www.ics.uci.edu" target="_blank">ics.uci.edu</a> </strong> </footer>
+</div>
+
+
+<div>
+<form style="margin-bottom: 50px;" class="wrapper">
+    <input style="float: left;" type="text" id="query" name="query", placeholder="{{query}}"/> 
+    <button style="float: right;">Search Now!</button>
+</form>
+</div>
+
+{% block content %}
+<div style="text-align: center; width: 500px; position: relative; margin: 0 auto;" class="container">
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% block page_content %}{% endblock %}
+</div>
+{% endblock %}
+
+
+<div>
+
+<table style="width: 50%;"class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Ranking</th>
+        <th scope="col">URIs</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">1</th>
+        <td><a href={{one}} target="_blank">{{one}}</a></td>
+      </tr>
+      <tr>
+        <th scope="row">2</th>
+        <td><a href={{two}} target="_blank">{{two}}</a></td>
+      </tr>
+      <tr>
+        <th scope="row">3</th>
+        <td><a href={{three}} target="_blank">{{three}}</a></td>
+      </tr>
+      <tr>
+        <th scope="row">4</th>
+        <td><a href={{four}} target="_blank">{{four}}</a></td>
+      </tr>
+      <tr>
+        <th scope="row">5</th>
+        <td><a href={{five}} target="_blank">{{five}}</a></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

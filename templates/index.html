@@ -1,4 +1,11 @@
 <style>
+    
+    @font-face {
+      font-family: 'SF Pro';
+      src: url('./fonts/SF-Pro.ttf') format('truetype');
+      font-weight: 500;
+      font-style: normal;
+    }
     .wrapper {
         text-align: center; /*让div内部文字居中*/
         background-color: #fff;
@@ -21,6 +28,7 @@
         margin-top: 100;
         text-align: left;
     }
+    body{ font-family:"SF Pro"}
 </style>
 <link rel="icon" href="{{ url_for('static', filename='logo.png')}}">
 <title>ICBC Search</title>
