@@ -57,10 +57,11 @@ class search():
 
     def start(self, Query: str):
         R = self.termAtATimeRetrieval(Query)
-        return [self.DocId_to_URL[str(x[1])] for x in R][:5]
+        res = [heapq.heappop(R) for _ in range(5)]
+        return res
 
 
 
 if __name__ == "__main__":
     searchEni = search("./indexFile/10176TokenDocId.txt", "./indexFile/tf_idfMerge.txt")
-    print(searchEni.run("master of computer science"))
+    print(searchEni.start("master of computer science"))
