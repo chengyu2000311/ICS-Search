@@ -1,7 +1,7 @@
 import hashlib
 import math
 import os, json
-import time
+import time, io
 from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup
@@ -135,6 +135,8 @@ class indexer:
             print("Dup link: {}, Dup content: {}".format(fragcount, samecount))
             self.numOfDocs = urlId
             self.merge_all_file(indexDir)
+            self.createIndexOfToken()
+            self.createDocIdtoURI()
 
     def merge_2_file(self, num1, num2):
         file1 = open(num1)
@@ -173,6 +175,36 @@ class indexer:
         os.remove(num1)
         os.remove(num2)
 
+    def createIndexOfToken(self):
+        ind = open("./indexFile/IoT.json", "w")
+        ha = dict()
+        c = 0
+        i = 0
+        with io.open("9906TokenDocId.txt", "rt", newline="\n") as words:
+            check = words.readline()
+            words.seek(0, 0)
+            for line in words:
+                x = line.split(" ->")[0]
+                print(x)
+                ha[x] = c+i
+                c += len(line)
+        json.dump(ha, ind)
+
+    def createDocIdtoURI(self):
+        ind = open("./indexFile/DtU.json", "w")
+        ha = dict()
+        c = 0
+        i = 0
+        with io.open("./indexFile/url_file.txt", "rt", newline= None) as words:
+            for word in words:
+                word=  word.split(" -> ")
+                docid= eval(word[0])
+                url = word[1]
+                url = url[:-1]
+                ha[docid] = url
+                print(docid)
+        json.dump(ha, ind)
+
     def merge_all_file(self, indexDir):
         os.chdir(indexDir)
         self.fileIndex = len(glob("*TokenDocId.txt"))
@@ -182,31 +214,8 @@ class indexer:
             num += 2
             if num == self.fileIndex - 1:
                 break
-        """
-        before_ranking = time.time()
-        with open(f'{self.fileIndex - 1}TokenDocId.txt') as rf:
-            idf_file = open('idf_score.txt', 'w')
-            line = rf.readline()
-            while line != '':
-                line = line.split(" -> ")
-                idf_score = []
-                for index, content in enumerate(eval(line[1])):
-                    score = round((1 + math.log10(content[0])) * math.log10(self.numOfDocs / len(eval(line[1]))), 2)
-                    idf_score.append((score, content[1]))
-                idf_score = sorted(idf_score, reverse=True)
-                idf_file.write(f'{line[0]} -> {idf_score}\n')
-                self.numOfTokens += 1
-                line = rf.readline()
-            idf_file.close()
-        after_ranking = time.time()
-        print("{} spent on ranking".format(after_ranking-before_ranking))
-        """
 
 if __name__ == "__main__":
     Index = indexer('C:/Users/Dinnerhe/Documents/CS121/M3-Rimuru/DEV')  # Directory of DEV
     Index.buildIndex()
-    # Index.merge_all_file('/Users/chenghaoyu/Desktop/CS 121/assignments/assignment3/CS121_Assignment3/indexFile')
-    print('Number of unique token:', Index.numOfTokens)
-    print('Number of docs:', Index.numOfDocs)
 
-    # 8690 http://flamingo.ics.uci.edu/releases/4.1/src/lbaktree/data/data.txt
