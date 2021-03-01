@@ -30,7 +30,7 @@ class search():
         L = list()
         R = [] # R is a priority queue
         for term in [self.stemmer.stem(x.lower()) for x in Query.split() if x.lower() not in self.stopwords]:
-            with open(self.indexFile) as f:
+            with open(self.indexFile, newline="\n") as f:
                 pos= self.Index_of_Token[term]
                 f.seek(pos)
                 line = f.readline()
