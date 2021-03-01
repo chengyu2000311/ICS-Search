@@ -1,11 +1,12 @@
-import os, Stemmer, linecache, time, json, io, multiprocessing, math, heapq
+import os, linecache, time, json, io, multiprocessing, math, heapq
 from collections import defaultdict
 from threading import Thread
+from nltk.stem import SnowballStemmer
 
 
 class search():
     def __init__(self, indexFile: str, tf_idfFile: str):
-        self.stemmer = Stemmer.Stemmer('english')
+        self.stemmer = SnowballStemmer("english")
         self.indexFile = indexFile
         self.tf_idfFile = tf_idfFile
         with open("./indexFile/IoT.json", 'r') as iotfile:
@@ -28,7 +29,7 @@ class search():
         A = [] # A will be a list of dict(DocId : score)
         L = list()
         R = [] # R is a priority queue
-        for term in [self.stemmer.stemWord(x.lower()) for x in Query.split() if x.lower() not in self.stopwords]:
+        for term in [self.stemmer.stem(x.lower()) for x in Query.split() if x.lower() not in self.stopwords]:
             with open(self.indexFile) as f:
                 pos= self.Index_of_Token[term]
                 f.seek(pos)
