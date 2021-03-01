@@ -3,7 +3,7 @@ import math
 import os, json
 import time, io
 from urllib.parse import urlparse
-
+import shutil
 from bs4 import BeautifulSoup
 from glob import glob
 from nltk.stem import SnowballStemmer
@@ -61,10 +61,10 @@ class indexer:
         self.urls = set()
 
     def buildIndex(self):
-        if os.path.exists('indexFile'):
-            os.rmdir('indexFile')
-        os.mkdir('indexFile')
-        os.chdir('indexFile')
+        if os.path.exists('indexFile2'):
+            shutil.rmtree('indexFile2')
+        os.mkdir('indexFile2')
+        os.chdir('indexFile2')
         indexDir = os.getcwd()
         hashes = set()
         fragcount = 0
@@ -75,9 +75,9 @@ class indexer:
             url_file = open(os.path.join(indexDir, 'url_file.txt'), 'w')
             for i in getAllJsonFile(self.dirWithJson):
                 if len(self.indexDocID) > 1000:
-                    if os.path.exists(os.path.join(indexDir, f'/{fileName0}TokenDocId.txt')):  
-                        os.remove(os.path.join(indexDir, f'/{fileName0}TokenDocId.txt'))
-                    with open(os.path.join(indexDir, f'/{fileName0}TokenDocId.txt'), 'w') as wf:
+                    if os.path.exists(os.path.join(indexDir, f'{fileName0}TokenDocId.txt')):  
+                        os.remove(os.path.join(indexDir, f'{fileName0}TokenDocId.txt'))
+                    with open(os.path.join(indexDir, f'{fileName0}TokenDocId.txt'), 'w') as wf:
                         for k, v in sorted(self.indexDocID.items()):  # sort dict based on token
                             wf.write(f'{k} -> {v}\n')
                     self.indexDocID.clear()
@@ -128,7 +128,7 @@ class indexer:
             raise
 
         finally:
-            with open(os.path.join(indexDir, f'/{fileName0}TokenDocId.txt'), 'w') as wf:
+            with open(os.path.join(indexDir, f'{fileName0}TokenDocId.txt'), 'w') as wf:
                 for k, v in sorted(self.indexDocID.items()):  # sort dict based on token
                     wf.write(f'{k} -> {v}\n')
             url_file.close()
@@ -191,7 +191,7 @@ class indexer:
         json.dump(ha, ind)
 
     def createDocIdtoURI(self):
-        ind = open(os.path.join("/indexFile", "DtU.json"), "w")
+        ind = open(os.path.join("indexFile", "DtU.json"), "w")
         ha = dict()
         c = 0
         i = 0
@@ -216,5 +216,6 @@ class indexer:
                 break
 
 if __name__ == "__main__":
-    pass
+    index = indexer(r"C:\Users\Administrator\Downloads\ICBC-Search-master\analyst")
+    index.buildIndex()
 
