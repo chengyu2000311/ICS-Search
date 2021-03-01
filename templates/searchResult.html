@@ -7,7 +7,7 @@
       font-style: normal;
     }
     .wrapper {
-        text-align: center; /*让div内部文字居中*/
+        text-align: center; 
         background-color: #fff;
         border-radius: 20px;
         width: 300px;
@@ -28,14 +28,32 @@
         margin-top: 100;
         text-align: left;
     }
+    .pagination-page-info {
+      padding: .6em;
+      padding-left: 0;
+      width: 40em;
+      margin: .5em;
+      margin-left: 0;
+      font-size: 12px;
+    }
+    .pagination-page-info b {
+        color: black;
+        background: #6aa6ed;
+        padding-left: 2px;
+        padding: .1em .25em;
+        font-size: 150%;
+    }
     body{ font-family:"SF Pro"}
 
 </style>
 <link rel="icon" href="{{ url_for('static', filename='logo.png')}}">
-<title>{{query}} - ICBC Search</title>
 
 <head>
+    <title>{{query}} - ICBC Search</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.css">
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
@@ -69,37 +87,27 @@
 </div>
 {% endblock %}
 
-
-<div>
-
-<table style="width: 50%;"class="table table-striped">
-    <thead>
-      <tr>
-        <th scope="col">Ranking</th>
-        <th scope="col">URIs</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td><a href={{one}} target="_blank">{{one}}</a></td>
-      </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td><a href={{two}} target="_blank">{{two}}</a></td>
-      </tr>
-      <tr>
-        <th scope="row">3</th>
-        <td><a href={{three}} target="_blank">{{three}}</a></td>
-      </tr>
-      <tr>
-        <th scope="row">4</th>
-        <td><a href={{four}} target="_blank">{{four}}</a></td>
-      </tr>
-      <tr>
-        <th scope="row">5</th>
-        <td><a href={{five}} target="_blank">{{five}}</a></td>
-      </tr>
-    </tbody>
-  </table>
+<div class="container">
+      <div class="table-responsive">
+        <table style="width: 50%" class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">Ranking</th>
+              <th scope="col">URIs</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for url in urls %}
+            <tr>
+              <td scope="row">{{ loop.index + (page - 1) * per_page }}</td>
+              <td> <a href="{{url}}" target="_blank">{{ url }}</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-left: 100px">
+      {{ pagination.links }}
+      </div>
 </div>
+
