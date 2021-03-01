@@ -3,7 +3,7 @@ import math
 import os, json
 import time, io
 from urllib.parse import urlparse
-import shutil
+
 from bs4 import BeautifulSoup
 from glob import glob
 from nltk.stem import SnowballStemmer
@@ -61,10 +61,10 @@ class indexer:
         self.urls = set()
 
     def buildIndex(self):
-        if os.path.exists('indexFile2'):
-            shutil.rmtree('indexFile2')
-        os.mkdir('indexFile2')
-        os.chdir('indexFile2')
+        if os.path.exists('indexFile'):
+            os.rmdir('indexFile')
+        os.mkdir('indexFile')
+        os.chdir('indexFile')
         indexDir = os.getcwd()
         hashes = set()
         fragcount = 0
@@ -176,11 +176,11 @@ class indexer:
         os.remove(num2)
 
     def createIndexOfToken(self):
-        ind = open(os.path.join('indexFile', 'IoT.json'), "w")
+        ind = open('IoT.json', "w")
         ha = dict()
         c = 0
         i = 0
-        with io.open((os.path.join('indexFile', glob("*TokenDocId.txt")[0])), "rt", newline="\n") as words:
+        with io.open(glob("*TokenDocId.txt")[0], "rt", newline="\n") as words:
             check = words.readline()
             words.seek(0, 0)
             for line in words:
@@ -191,11 +191,11 @@ class indexer:
         json.dump(ha, ind)
 
     def createDocIdtoURI(self):
-        ind = open(os.path.join("indexFile", "DtU.json"), "w")
+        ind = open('DtU.json', "w")
         ha = dict()
         c = 0
         i = 0
-        with io.open(os.path.join("indexFile", "url_file.txt"), "rt", newline= None) as words:
+        with io.open("url_file.txt", "rt", newline= None) as words:
             for word in words:
                 word=  word.split(" -> ")
                 docid= eval(word[0])
@@ -216,6 +216,6 @@ class indexer:
                 break
 
 if __name__ == "__main__":
-    index = indexer(r"C:\Users\Administrator\Downloads\ICBC-Search-master\analyst")
+    index = indexer(r'/Users/chenghaoyu/Desktop/CS 121/assignments/assignment3/ANALYST')
     index.buildIndex()
 
