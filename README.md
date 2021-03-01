@@ -9,7 +9,7 @@
 
 + A search engine from the ground up that is capable of handling tens of thousands of documents or Web pages, under harsh op- erational constriants and having a query response time under 300ms.
 
-+ Using term-at-a-time during indexing. <strong>Some pages with more than 10000 words are considered as random pages and are ignored.</strong>
++ Using term-at-a=time during indexing. <strong> Some pages with more than 10000 words are considered as random pages and are ignored. </strong>
 + Using conjective processing and multi-threading during searching.
 
 
@@ -22,9 +22,6 @@
 + [Flask](https://flask.palletsprojects.com/en/1.1.x/installation/#installation)
 + [Flask Pagination](https://pythonhosted.org/Flask-paginate/)
 
-## Demo
-
-![walkThrough](walkThrough.gif)
 
 ## Installation or Getting Started
 
@@ -35,14 +32,19 @@
 	git clone https://github.com/chengyu2000311/CS171.git
     unzip indexFile.zip
     python3 frontend.py
+    open a browser and type localhost:2021
 
+## Demo
 
+![walkThrough](walkThrough.gif)
 
-## Usage
+## Potential Improvement
 
-+ open a browser and type localhost:2021
++ Unable to handle query like masterofcomputerscience.
 
+    + add n-gram algoritm during indexing
 
++ Didn't add similarity check during indexing
     
 ## Reference
 
