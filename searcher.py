@@ -9,9 +9,9 @@ class search():
         self.stemmer = SnowballStemmer("english")
         self.indexFile = indexFile
         self.tf_idfFile = tf_idfFile
-        with open("./indexFile/IoT.json", 'r') as iotfile:
+        with open("/indexFile/IoT.json", 'r') as iotfile:
             self.Index_of_Token = json.load(iotfile)
-        with open("./indexFile/DtU.json", 'r') as duf:
+        with open("/indexFile/DtU.json", 'r') as duf:
             self.DocId_to_URL = json.load(duf)
         self.numOfDocs = len(self.DocId_to_URL)
         self.stopwords = {'ourselves', 'hers', 'between', 'yourself', 'but', 'again', 'there', 'about', 'once', 'during', 'out', 'very', 'having', 'with', 'they', 'own', 'an', 'be', 'some', 'for', 'do', 'its', 'yours', 'such', 'into', 'of', 'most', 'itself', 'other', 'off', 'is', 's', 'am', 'or', 'who', 'as', 'from', 'him', 'each', 'the', 'themselves', 'until', 'below', 'are', 'we', 'these', 'your', 'his', 'through', 'don', 'nor', 'me', 'were', 'her', 'more', 'himself', 'this', 'down', 'should', 'our', 'their', 'while', 'above', 'both', 'up', 'to', 'ours', 'had', 'she', 'all', 'no', 'when', 'at', 'any', 'before', 'them', 'same', 'and', 'been', 'have', 'in', 'will', 'on', 'does', 'yourselves', 'then', 'that', 'because', 'what', 'over', 'why', 'so', 'can', 'did', 'not', 'now', 'under', 'he', 'you', 'herself', 'has', 'just', 'where', 'too', 'only', 'myself', 'which', 'those', 'i', 'after', 'few', 'whom', 't', 'being', 'if', 'theirs', 'my', 'against', 'a', 'by', 'doing', 'it', 'how', 'further', 'was', 'here', 'than'}
@@ -69,5 +69,5 @@ class search():
 
 
 if __name__ == "__main__":
-    searchEni = search("./indexFile/9906TokenDocId.txt", "./indexFile/tf_idfMerge.txt")
+    searchEni = search("/indexFile/9906TokenDocId.txt", "/indexFile/tf_idfMerge.txt")
     print(searchEni.start("master of computer science"))

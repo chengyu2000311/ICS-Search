@@ -176,11 +176,11 @@ class indexer:
         os.remove(num2)
 
     def createIndexOfToken(self):
-        ind = open("./indexFile/IoT.json", "w")
+        ind = open("/indexFile/IoT.json", "w")
         ha = dict()
         c = 0
         i = 0
-        with io.open("9906TokenDocId.txt", "rt", newline="\n") as words:
+        with io.open(glob("*TokenDocId.txt")[0], "rt", newline="\n") as words:
             check = words.readline()
             words.seek(0, 0)
             for line in words:
@@ -191,11 +191,11 @@ class indexer:
         json.dump(ha, ind)
 
     def createDocIdtoURI(self):
-        ind = open("./indexFile/DtU.json", "w")
+        ind = open("/indexFile/DtU.json", "w")
         ha = dict()
         c = 0
         i = 0
-        with io.open("./indexFile/url_file.txt", "rt", newline= None) as words:
+        with io.open("/indexFile/url_file.txt", "rt", newline= None) as words:
             for word in words:
                 word=  word.split(" -> ")
                 docid= eval(word[0])
