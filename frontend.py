@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, flash
-import time
+import time, os
 from searcher import search
+from glob import glob
 from flask_paginate import Pagination, get_page_args
 app=Flask(__name__)
 
@@ -15,7 +16,7 @@ def index():
 def searchResult():
     query = request.args.get('query')
     urls = [''] * 5
-    searchEni = search("./indexFile/9906TokenDocId.txt", "./indexFile/tf_idfMerge.txt")
+    searchEni = search(glob(os.path.join("indexFile", "*TokenDocId.txt"))[0])
     if query != None and query!= "":
         start = time.time()
         try:
