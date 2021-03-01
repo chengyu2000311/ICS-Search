@@ -29,7 +29,6 @@ def searchResult():
     page, per_page, offset = get_page_args(page_parameter='page',
                                            per_page_parameter='per_page')
     pagination_urls = getUsers(urls, offset=offset, per_page=per_page)
-    print(pagination_urls)
     pagination = Pagination(page=page, per_page=per_page, total=len(urls), alignment="center",
                             css_framework='bootstrap4')
 
