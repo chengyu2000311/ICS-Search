@@ -48,7 +48,7 @@
 
 ## Contributors
 
-+ Haoyu Cheng, Qiwei He, Runyi Li
++ Haoyu Cheng, Qiwei He, Runyi Yang
 
 
 
