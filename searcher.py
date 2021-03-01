@@ -1,4 +1,4 @@
-import os, linecache, time, json, io, multiprocessing, math, heapq
+import os, time, json, io, multiprocessing, math, heapq
 from collections import defaultdict
 from threading import Thread
 from nltk.stem import SnowballStemmer
@@ -68,5 +68,4 @@ class search():
 
 
 if __name__ == "__main__":
-    searchEni = search(os.path.join("indexFile", glob("*TokenDocId.txt")[0]))
-    print(searchEni.start("master of computer science"))
+    pass
