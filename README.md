@@ -16,9 +16,11 @@
 
 ## Requirements
 
-+ [Python3 or later]("https://www.python.org/downloads/")
-+ [Flask]("https://flask.palletsprojects.com/en/1.1.x/installation/#installation")
-+ [Flask Pagination]("https://pythonhosted.org/Flask-paginate/")
++ [Python3 or later](https://www.python.org/downloads/)
++ [NLTK](https://www.nltk.org/)
++ [BeautifulSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
++ [Flask](https://flask.palletsprojects.com/en/1.1.x/installation/#installation)
++ [Flask Pagination](https://pythonhosted.org/Flask-paginate/)
 
 ## Demo
 
@@ -28,6 +30,8 @@
 
     python3 -m pip install Flask
     python3 -m pip install -U flask-paginate
+    python3 -m pip install --user -U nltk
+    python3 -m pip install beautifulsoup4
 	git clone https://github.com/chengyu2000311/CS171.git
     unzip indexFile.zip
     python3 frontend.py
