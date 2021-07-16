@@ -9,7 +9,7 @@
 
 + A search engine from the ground up that is capable of handling tens of thousands of documents or Web pages, under harsh operational constraints and having a query response time under 300ms.
 + Using term-at-a-time during indexing. <strong> Some pages with more than 10000 words are considered as random pages and are ignored. </strong>
-+ Using conjective processing and multi-threading during searching.
++ Using conjunctive processing and multi-threading during searching.
 
 
 
