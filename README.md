@@ -1,7 +1,7 @@
 # ICS Search
 
 + It is a Project Assignment for CS 121 (Information Retrieval) at UC Irvine. The project is a search engine searching for pages under domain [ics.uci.edu](ics.uci.edu). 
-+ The name ICBC comes from Industrial and Commercial Bank of China.
++ The name ICS comes from School of Information and Computer Science in UC Irvine.
 
 ***************************
 
